@@ -1,19 +1,18 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { v4 as uuidV4 } from "uuid";
 
 const Form = ({ input, setInput, todos, setTodos, editTodo, setEditTodo }) => {
     const updateTodo = (task, id, completed) => {
         // // const newTodo = todos.map((todo) =>
         //     todo.id === id ? { task, id, completed } : todo
         // );
-        const newTodo = todos.find(todo => todo.id === id );
+        const newTodo = todos.find(todo => todo.id === id);
         console.log(todos);
+        newTodo.task = input;
         console.log(newTodo.task);
         console.log(newTodo.id);
-        setTodos(newTodo);
+        axios.put(`http://localhost:8080/todos/todos/${id}`, newTodo)
         setEditTodo("");
-        axios.put(`http://localhost:8080/todos/${id}`, {newTodo})
     };
 
     useEffect(() => {

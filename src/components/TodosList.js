@@ -1,5 +1,5 @@
-import axios from "axios";
-import React from "react";
+import React,{useEffect} from "react";
+import allTodos, { deleteTodo } from "./apicalls";
 
 const TodosList = ({todos, setTodos, setEditTodo}) => {
     const handleComplete = (todo) => {
@@ -11,20 +11,23 @@ const TodosList = ({todos, setTodos, setEditTodo}) => {
                 return item;
             })
         );
-    };
+    }; 
 
-    axios.get("http://localhost:8080/todos")
-    .then((response) => {
-        setTodos(response.data)
+    useEffect(() =>{
+        allTodos().then((response) => {
+            setTodos(response.data);
+        })
     })
+
 
     const handleEdit = ({id}) => {
         const findTodo = todos.find ((todo) => todo.id === id);
         setEditTodo(findTodo);
     };
 
-    const handleDelete = ({id}) => {
-        setTodos(todos.filter((todo) => todo.id !==id));
+    const handleDelete = (id) => {
+        console.log(id)
+        deleteTodo(id);
     };
 
     const preventTyping = (event) => {
@@ -35,7 +38,6 @@ const TodosList = ({todos, setTodos, setEditTodo}) => {
         <div>
             {todos.map((todo) => (
                 <li className="list-item" key={todo.id}>
-                    {/* <p className="list">{todo.task}</p> */}
                     <input
                         type="text"
                         value={todo.task}
@@ -49,7 +51,7 @@ const TodosList = ({todos, setTodos, setEditTodo}) => {
                         <button className="button-edit task-button" onClick={() => handleEdit(todo)}>
                             <i className="fa fa-edit"></i>
                         </button>
-                        <button className="button-delete task-button" onClick={() => handleDelete(todo)}>
+                        <button className="button-delete task-button" onClick={() => handleDelete(todo.id)}>
                             <i className="fa fa-trash"></i>
                         </button>
                     </div>
